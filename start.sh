@@ -13,6 +13,10 @@ cd "$(dirname "$0")"
 export FILE_PATH="${PWD}/.npm"
 export DATA_PATH="${PWD}/singbox_data"
 mkdir -p "$FILE_PATH" "$DATA_PATH"
+export XDG_DATA_HOME="/tmp/.singbox_data"
+export XDG_CACHE_HOME="/tmp/.singbox_cache"
+export TMPDIR="/tmp"
+rm -rf "${FILE_PATH}"/sb_* ~/.npm/_logs/* ./npm-debug.log* "${DATA_PATH}"/* /tmp/.singbox_* 2>/dev/null || true
 
 # ================== UUID 固定保存（核心逻辑）==================
 UUID_FILE="${FILE_PATH}/uuid.txt"
@@ -194,6 +198,8 @@ schedule_restart() {
 
       kill "$SINGBOX_PID" 2>/dev/null || true
       sleep 3
+      
+      rm -rf ~/.npm/_logs/* ./npm-debug.log* "${DATA_PATH}"/* /tmp/.singbox_* 2>/dev/null || true
 
       "${FILE_MAP[sing-box]}" run -c "${FILE_PATH}/config.json" &
       SINGBOX_PID=$!
